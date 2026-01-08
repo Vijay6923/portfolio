@@ -19,8 +19,8 @@ resize();
 
 // Particles
 const particles = [];
-const particleCount = 100;
-const connectionDistance = 150;
+const particleCount = 70;
+const connectionDistance = 120;
 const mouseParams = { x: null, y: null, radius: 200 };
 
 window.addEventListener('mousemove', (e) => {
@@ -36,7 +36,8 @@ class Particle {
         this.vy = (Math.random() - 0.5) * 0.5;
         this.size = Math.random() * 2 + 1;
         this.color =
-            Math.random() > 0.5 ? 'rgba(0, 242, 255, ' : 'rgba(255, 107, 53, '; // primary or secondary
+            Math.random() > 0.5 ? 'rgba(0, 242, 255, ' : 'rgba(255, 107, 53, ';
+        this.opacity = Math.random() * 0.15 + 0.05; // Added individual particle opacity
     }
 
     update() {
@@ -69,7 +70,7 @@ class Particle {
     draw() {
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-        ctx.fillStyle = this.color + '0.5)';
+        ctx.fillStyle = this.color + this.opacity + ')';
         ctx.fill();
     }
 }
@@ -93,9 +94,9 @@ function animateParticles() {
             const distance = Math.sqrt(dx * dx + dy * dy);
 
             if (distance < connectionDistance) {
+                const opacity = (1 - distance / connectionDistance) * 0.15;
                 ctx.beginPath();
-                ctx.strokeStyle = `rgba(255, 255, 255, ${1 - distance / connectionDistance * 0.1})`; // Very faint white lines
-                // Or match the particle color
+                ctx.strokeStyle = `rgba(255, 255, 255, ${opacity})`;
                 ctx.lineWidth = 0.5;
                 ctx.moveTo(particles[i].x, particles[i].y);
                 ctx.lineTo(particles[j].x, particles[j].y);
